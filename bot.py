@@ -52,7 +52,7 @@ if __name__ == "__main__":
         if message.author == bot.user:
             return
 
-        if command or not random.randint(0, 100) % 6:
+        if command or not random.randint(0, 100) % 15:
             await bot.insult(message.channel, message.author)
 
     @bot.command(name="insult")
