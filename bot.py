@@ -15,9 +15,10 @@ class InsultBot(commands.Bot):
         super().__init__(**options)
         self._token = os.getenv("DISCORD_TOKEN")
         parent_dir = Path(__file__).parent
-        self._insults = (parent_dir / "insults.txt").read_text().split('\n')
-        with (parent_dir / "custom.json").open() as json_stream:
-            self._custom_users: dict = json.load(json_stream).get("users")
+        with (parent_dir / "insults.json").open() as json_stream:
+            data: dict = json.load(json_stream)
+            self._insults = data.get("generic")
+            self._custom_users: dict = data.get("users")
 
     async def on_ready(self):
         print(f"{self.user} has found these users:")
