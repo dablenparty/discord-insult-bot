@@ -1,6 +1,5 @@
 # bot.py
 import random
-
 import discord
 from discord.ext import commands
 import os
@@ -26,34 +25,37 @@ class InsultBot(commands.Bot):
         members = [str(member.id) + ": " + member.name for member in guild.members]
         print('\n - '.join(members))
 
-    async def on_message(self, message: discord.Message):
-        if message.author == self.user:
-            return
-
-        if not random.randint(0, 100) % 3:
-            await self._insult(message.channel, message.author)
-
-    async def _insult(self, channel: discord.TextChannel, user: discord.User):
+    async def insult(self, channel: discord.TextChannel, user: discord.User):
         user_id_string = f"<@{user.id}>"
-        insult = ""
+        insults = self._insults
+        chosen_insult = ""
         if str(user.id) in self._custom_users.keys():
-            insult = random.choice(self._custom_users.get(str(user.id), "").get("insults"))
-        while not insult.strip():
-            insult = random.choice(self._insults)
-        insult = insult.replace("{user}", user_id_string) if "{user}" in insult else user_id_string + " " + insult
-        await channel.send(insult)
+            insults.extend(self._custom_users.get(str(user.id), "").get("insults"))
+        while not chosen_insult.strip():
+            chosen_insult = random.choice(self._insults)
+        chosen_insult = chosen_insult.replace("{user}", user_id_string) if "{user}" in chosen_insult else user_id_string + " " + chosen_insult
+        await channel.send(chosen_insult)
 
     def launch(self):
         self.run(self._token)
 
 
-def main() -> None:
+if __name__ == "__main__":
     load_dotenv()
     intents = discord.Intents.default()
     intents.members = True
     bot = InsultBot(intents=intents, command_prefix="?")
+
+    @bot.listen('on_message')
+    async def on_message(message: discord.Message, command=False):
+        if message.author == bot.user:
+            return
+
+        if command or not random.randint(0, 100) % 6:
+            await bot.insult(message.channel, message.author)
+
+    @bot.command(name="insult")
+    async def insult_command(ctx: commands.Context):
+        await on_message(ctx.message, True)
+
     bot.launch()
-
-
-if __name__ == "__main__":
-    main()
