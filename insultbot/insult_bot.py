@@ -25,11 +25,19 @@ class InsultBot(commands.Bot):
             print(f" - {guild.name} ({guild.id})\n")
 
     async def insult(self, channel: discord.TextChannel, user: discord.User):
+        """
+        Insults a user
+
+        :param channel: Text channel to send message in
+        :param user: User to insult
+        """
         user_id_string = f"<@{user.id}>"
-        insults = self._insults
         chosen_insult = ""
+
+        insults = self._insults
         if str(user.id) in self._custom_users.keys():
             insults.extend(self._custom_users.get(str(user.id), "").get("insults"))
+
         while not chosen_insult.strip():
             chosen_insult = random.choice(self._insults)
         chosen_insult = chosen_insult.replace("{user}", user_id_string) if "{user}" in chosen_insult else user_id_string + " " + chosen_insult
