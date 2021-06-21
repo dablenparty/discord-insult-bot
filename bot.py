@@ -1,11 +1,12 @@
 # bot.py
 
 import discord
+from discord.ext import commands
 import os
 from dotenv import load_dotenv
 
 
-class SubClient(discord.Client):
+class DiscordBot(commands.Bot):
     __slots__ = ["_token"]
 
     def __init__(self, **options):
@@ -31,8 +32,10 @@ class SubClient(discord.Client):
 
 def main() -> None:
     load_dotenv()
-    client = SubClient()
-    client.launch()
+    intents = discord.Intents.default()
+    intents.members = True
+    bot = DiscordBot(intents=intents, command_prefix="?")
+    bot.launch()
 
 
 if __name__ == "__main__":
