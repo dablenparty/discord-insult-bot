@@ -6,7 +6,7 @@ import os
 from dotenv import load_dotenv
 
 
-class DiscordBot(commands.Bot):
+class InsultBot(commands.Bot):
     __slots__ = ["_token"]
 
     def __init__(self, **options):
@@ -34,7 +34,7 @@ def main() -> None:
     load_dotenv()
     intents = discord.Intents.default()
     intents.members = True
-    bot = DiscordBot(intents=intents, command_prefix="?")
+    bot = InsultBot(intents=intents, command_prefix="?")
     bot.launch()
 
 
