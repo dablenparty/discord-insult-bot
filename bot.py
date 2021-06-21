@@ -6,7 +6,8 @@ from dotenv import load_dotenv
 
 from insultbot.insult_bot import InsultBot
 
-if __name__ == "__main__":
+
+def main():
     load_dotenv()
     intents = discord.Intents.default()
     intents.members = True
@@ -26,3 +27,7 @@ if __name__ == "__main__":
         await on_message(ctx.message, True)
 
     bot.launch()
+
+
+if __name__ == "__main__":
+    main()
