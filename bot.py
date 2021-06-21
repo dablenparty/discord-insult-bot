@@ -5,22 +5,25 @@ import discord
 from discord.ext import commands
 import os
 from dotenv import load_dotenv
+from pathlib import Path
+import json
 
 
 class InsultBot(commands.Bot):
-    __slots__ = ["_token"]
-    _insults = ["you're a sad excuse for a human being",
-                "the fact that your mother missed with the coat hanger is proof to me that God doesn't exist",
-                "maybe if you could stomach to look in the mirror more often you might realize why you don't look in the mirror"]
+    __slots__ = ["_token", "_insults", "_custom_users"]
 
     def __init__(self, **options):
         super().__init__(**options)
         self._token = os.getenv("DISCORD_TOKEN")
+        parent_dir = Path(__file__).parent
+        self._insults = (parent_dir / "insults.txt").read_text().split('\n')
+        with (parent_dir / "custom.json").open() as json_stream:
+            self._custom_users: dict = json.load(json_stream).get("users")
 
     async def on_ready(self):
         print(f"{self.user} has found these users:")
         guild = self.guilds[0]
-        members = [member.name for member in guild.members]
+        members = [str(member.id) + ": " + member.name for member in guild.members]
         print('\n - '.join(members))
 
     async def on_message(self, message: discord.Message):
@@ -31,7 +34,14 @@ class InsultBot(commands.Bot):
             await self._insult(message.channel, message.author)
 
     async def _insult(self, channel: discord.TextChannel, user: discord.User):
-        await channel.send(f"<@{user.id}> {random.choice(self._insults)}")
+        user_id_string = f"<@{user.id}>"
+        insult = ""
+        if str(user.id) in self._custom_users.keys():
+            insult = random.choice(self._custom_users.get(str(user.id), "").get("insults"))
+        while not insult.strip():
+            insult = random.choice(self._insults)
+        insult = insult.replace("{user}", user_id_string) if "{user}" in insult else user_id_string + " " + insult
+        await channel.send(insult)
 
     def launch(self):
         self.run(self._token)
