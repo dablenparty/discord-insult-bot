@@ -13,6 +13,13 @@
     "{user}'s head must be hollow, there's no other way it can fit so much air",
     "I bet if I told {user} to work the corner, they'd ask which one"
   ],
-  "users": {
+  "knownUsers": {
+    "285182375955136514": {
+      "name": "child sacrifice#7643",
+      "insults": [
+        "Crawl back to your wheelchair, {user}",
+        "That's it, keep trying {user}. Eventually you'll be able to stand up"
+      ]
+    }
   }
 }

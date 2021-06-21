@@ -51,7 +51,7 @@ class InsultBot(commands.Bot):
         user_id_string = f"<@{user.id}>"
         chosen_insult = ""
         insults: list = self._insult_json_data.get("generic")
-        custom_users: dict = self._insult_json_data.get("customUsers")
+        custom_users: dict = self._insult_json_data.get("knownUsers")
 
         if not self._try_add_user_to_list(user, custom_users):
             insults.extend(custom_users.get(str(user.id), "").get("insults"))
