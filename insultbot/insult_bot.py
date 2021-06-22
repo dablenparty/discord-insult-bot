@@ -39,6 +39,13 @@ class InsultBot(commands.Bot):
             json.dump(self._insult_json_data, json_file)
         return True
 
+    def add_insult_to_user(self, user: discord.User, insult: str):
+        known_users: dict = self._insult_json_data.get("knownUsers")
+        self._try_add_user_to_list(user, known_users)
+        known_users.get(str(user.id)).get("insults").append(insult)
+        with self._insults_file.open("w") as json_file:
+            json.dump(self._insult_json_data, json_file)
+
     async def insult(self, channel: discord.TextChannel, user: discord.User):
         """
         Insults a user
