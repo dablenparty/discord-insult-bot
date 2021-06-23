@@ -20,8 +20,9 @@ def main():
         if message.author == bot.user or (not command and message.content.startswith(cmd_prefix)):
             return
 
-        if command or not random.randint(0, 100) % 15:
-            await bot.insult(message.channel, message.author)
+        # message.guild will be None if its a DM
+        if message.guild is not None and (command or not random.randint(0, 100) % 15):
+            await bot.insult(message.guild, message.channel, message.author)
 
     @bot.command(name="insult")
     async def insult_command(ctx: commands.Context):
@@ -30,15 +31,33 @@ def main():
     @bot.command(name="addinsult")
     async def add_insult(ctx: commands.Context):
         message: discord.Message = ctx.message
-        if len(message.mentions) != 1 or message.mention_everyone:
-            await ctx.send(f"Usage: `{cmd_prefix}addinsult user insult`")
-            return
-        user: discord.User = message.mentions[0]
-        insult = message.content\
-            .replace(f"{cmd_prefix}{ctx.command} ", "")\
-            .replace(f"<@!{user.id}> ", "", 1)\
-            .replace(f"<@!{user.id}> ", "{user}")
-        bot.add_insult_to_user(user, insult)
+        insult = message.content.replace(f"{cmd_prefix}{ctx.command} ", "")
+        mentions = message.mentions
+        user = None if not len(mentions) else mentions[0]  # uses the first mention in the message
+        if user is not None:
+            insult = insult.replace(f"<@!{user.id}> ", "", 1).replace(f"<@!{user.id}>", "{user}")
+        bot.add_insult(ctx.guild, insult, user)
+        await message.add_reaction("👌")
+
+    @bot.command(name="listinsults")
+    async def list_insults(ctx: commands.Context):
+        mentions: list = ctx.message.mentions
+        user = None if not len(mentions) else mentions[0]  # uses the first mention in the message
+        formatted_string = bot.get_formatted_insult_list(ctx.guild, user)
+        await ctx.send(formatted_string)
+
+    @bot.command(name="removeinsult")
+    async def remove_insult(ctx: commands.Context):
+        message: discord.Message = ctx.message
+        mentions: list = message.mentions
+        user = None if not len(mentions) else mentions[0]  # uses the first mention in the message
+        insult_index = message.content.split(" ")[-1]
+        try:
+            bot.remove_insult(insult_index, ctx.guild, user)
+            await message.add_reaction("👌")
+        except (IndexError, ValueError):
+            await ctx.send(f"Can't remove what isn't there. Make sure that `{insult_index}` is at least a number, "
+                           "then make sure it actually exists. The fact I have to tell you this...")
 
     bot.launch()
 
