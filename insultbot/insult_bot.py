@@ -6,16 +6,18 @@ import random
 from replit import Database
 
 from . import __version__
+from .insult_api import InsultApi
 from discord.ext import commands
 
 
 class InsultBot(commands.Bot):
-    __slots__ = ["_token", "_database"]
+    __slots__ = ["_token", "_database", "_insult_api"]
 
     def __init__(self, **options):
         super().__init__(**options)
         self._token = os.getenv("DISCORD_TOKEN")
         self._database = Database(os.getenv("REPLIT_DB_URL"))
+        self._insult_api = InsultApi()
 
     async def on_ready(self):
         print(f"{self.user} v{__version__} has loaded in the following guilds:")
@@ -58,17 +60,20 @@ class InsultBot(commands.Bot):
             # this happens when the bot receives a dm. I'll deal with this later
             return
         user_id_string = f"<@{user.id}>"
-        insults: list = self._database.get("generic")
-        db_guilds: dict = self._database.get("guilds")
+        if not random.randint(0, 2):
+            insults: list = self._database.get("generic")
+            db_guilds: dict = self._database.get("guilds")
 
-        # get guild and user specific insults
-        if (guild_data := db_guilds.get(str(guild.id))) is not None:
-            insults.extend(guild_data.get("insults"))
-            custom_users = guild_data.get("customUsers")
-            if str(user.id) in custom_users:
-                insults.extend(custom_users.get(str(user.id)).get("insults"))
+            # get guild and user specific insults
+            if (guild_data := db_guilds.get(str(guild.id))) is not None:
+                insults.extend(guild_data.get("insults"))
+                custom_users = guild_data.get("customUsers")
+                if str(user.id) in custom_users:
+                    insults.extend(custom_users.get(str(user.id)).get("insults"))
 
-        chosen_insult = random.choice(insults)
+            chosen_insult = random.choice(insults)
+        else:
+            chosen_insult = self._insult_api.get_insult()
         chosen_insult = chosen_insult.replace("{user}", user_id_string) if "{user}" in chosen_insult \
             else user_id_string + " " + chosen_insult
         await channel.send(chosen_insult)
