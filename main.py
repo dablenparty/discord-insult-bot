@@ -21,7 +21,7 @@ def main():
             return
 
         # message.guild will be None if its a DM
-        if message.guild is not None and (command or not random.randint(0, 100) % 15):
+        if message.guild is not None and (command or not random.randint(0, 100) % 30):
             await bot.insult(message.guild, message.channel, message.author)
 
     @bot.command(name="insult")
