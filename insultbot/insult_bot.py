@@ -62,8 +62,7 @@ class InsultBot(commands.Bot):
         db_guilds: dict = self._database.get("guilds")
 
         # get guild and user specific insults
-        if str(guild.id) in db_guilds:
-            guild_data: dict = db_guilds.get(str(guild.id))
+        if (guild_data := db_guilds.get(str(guild.id))) is not None:
             insults.extend(guild_data.get("insults"))
             custom_users = guild_data.get("customUsers")
             if str(user.id) in custom_users:
