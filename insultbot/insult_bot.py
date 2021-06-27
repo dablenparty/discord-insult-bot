@@ -8,17 +8,34 @@ from discord.ext import commands
 
 
 class InsultBot(commands.Bot):
-    __slots__ = ["_token", "_insult_api"]
+    __slots__ = ["_token", "_insult_api", "_recently_insulted"]
 
     def __init__(self, **options):
         super().__init__(**options)
         self._token = os.getenv("DISCORD_TOKEN")
         self._insult_api = InsultApi()
+        self._recently_insulted = False
+
+    @property
+    def recently_insulted(self):
+        return self._recently_insulted
+
+    @recently_insulted.setter
+    def recently_insulted(self, value: bool):
+        self._recently_insulted = value
 
     async def on_ready(self):
         print(f"{self.user} v{__version__} has loaded in the following guilds:")
         for guild in self.guilds:
             print(f" - {guild.name} ({guild.id})\n")
+
+    def talk_back(self, message: discord.Message):
+        if not self._recently_insulted:
+            return False
+        for trigger in ["you", "yourself", "youre", "you're", "your"]:
+            if trigger in message.content.lower():
+                return True
+        return False
 
     # def add_insult(self, guild: discord.Guild, insult: str, user: discord.User = None):
     #     db_guilds = self._database.get("guilds")
@@ -64,6 +81,7 @@ class InsultBot(commands.Bot):
             else user_id_string + " " + chosen_insult
         if message is not None:
             await message.add_reaction("🖕")
+        self._recently_insulted = True
         await channel.send(chosen_insult)
 
     # def _get_insults_list(self, guild: discord.Guild, user: discord.User) -> list:

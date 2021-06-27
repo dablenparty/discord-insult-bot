@@ -25,8 +25,13 @@ def main():
             return
 
         # message.guild will be None if its a DM
-        if message.guild is not None and (bot.user.id in {member.id for member in message.mentions} or not random.randint(0, 100) % 30):
+        if message.guild is not None \
+                and (bot.talk_back(message)
+                     or bot.user.id in {member.id for member in message.mentions}
+                     or not random.randint(0, 100) % 30):
             await bot.insult(message.channel, message.author, message)
+        else:
+            bot.recently_insulted = False
 
     bot.launch()
 
