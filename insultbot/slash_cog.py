@@ -6,8 +6,8 @@ from .insult_bot import InsultBot
 
 
 class SlashCog(commands.Cog):
-    def __init__(self, bot: InsultBot):
-        self.bot: InsultBot = bot
+    def __init__(self, bot: commands.Bot):
+        self.bot = bot
 
     @cog_ext.cog_slash(name="insult",
                        description="Asks the bot to insult you, or others...",
