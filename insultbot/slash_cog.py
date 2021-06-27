@@ -15,9 +15,9 @@ class SlashCog(commands.Cog):
                                                               "The user you wish to sick the bot on",
                                                               discord.User,
                                                               False)])
-    async def _insult_command(self, ctx: SlashContext, tagged_user: discord.User = None):
-        user = ctx.author if tagged_user is None else tagged_user
-        await self.bot.insult(ctx.channel, user)
+    async def _insult_command(self, ctx: SlashContext, user: discord.User = None):
+        user_to_insult = ctx.author if user is None else user
+        await self.bot.insult(ctx.channel, user_to_insult)
 
 
 def setup(bot: commands.Bot):
