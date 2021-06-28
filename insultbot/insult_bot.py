@@ -30,10 +30,14 @@ class InsultBot(commands.Bot):
             print(f" - {guild.name} ({guild.id})\n")
 
     def talk_back(self, message: discord.Message):
+        if message.reference is not None and message.reference.resolved.author == self.user:
+            return True
         if not self._recently_insulted:
             return False
-        for trigger in ["you", "yourself", "youre", "you're", "your"]:
-            if trigger in message.content.lower():
+        content = message.content.lower()
+        triggers = ["you", "yourself", "youre", "you're", "your", "yours"]
+        for trigger in triggers:
+            if trigger in content:
                 return True
         return False
 
@@ -53,36 +57,18 @@ class InsultBot(commands.Bot):
     #         return
     #     custom_users.get("insults").append(insult)
 
-    async def insult(self, channel: discord.TextChannel, sender: discord.User, message: discord.Message = None):
+    def generate_insult(self, user: discord.User) -> str:
         """
-        Insults a user
+        Generates and formats an insult from the API
 
-        :param message: Message to optionally react to
-        :param channel: Channel to send insult in
-        :param sender: User to insult
+        :param user: User to insult
+        :return: Formatted insult
         """
-
-        user_id_string = f"<@{sender.id}>"
-        # if not random.randint(0, 2):
-        #     insults: list = self._database.get("generic")
-        #     db_guilds: dict = self._database.get("guilds")
-        #
-        #     get guild and user specific insults
-        #     if (guild_data := db_guilds.get(str(guild.id))) is not None:
-        #         insults.extend(guild_data.get("insults"))
-        #         custom_users = guild_data.get("customUsers")
-        #         if str(user.id) in custom_users:
-        #             insults.extend(custom_users.get(str(user.id)).get("insults"))
-        #
-        #     chosen_insult = random.choice(insults)
-
-        chosen_insult = self._insult_api.get_insult()
-        chosen_insult = chosen_insult.replace("{user}", user_id_string) if "{user}" in chosen_insult \
-            else user_id_string + " " + chosen_insult
-        if message is not None:
-            await message.add_reaction("🖕")
-        self._recently_insulted = True
-        await channel.send(chosen_insult)
+        user_tag = f"<@{user.id}>"  # tags the user
+        insult = self._insult_api.get_insult()
+        insult = insult.replace("{user}", user_tag) if "{user}" in insult \
+            else user_tag + " " + insult
+        return insult
 
     # def _get_insults_list(self, guild: discord.Guild, user: discord.User) -> list:
     #     guilds: dict = self._database.get("guilds")
