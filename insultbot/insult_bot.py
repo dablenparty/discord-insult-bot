@@ -1,6 +1,7 @@
 # insult_bot.py
 import discord
 import os
+from pprint import pprint
 
 from . import __version__
 from .insult_api import InsultApi
@@ -26,9 +27,9 @@ class InsultBot(commands.Bot):
 
     async def on_ready(self):
         guilds = self.guilds
-        print(f"{self.user} v{__version__} has loaded in {len(guilds)} guilds:")
-        for guild in guilds:
-            print(f" - {guild.name} ({guild.id})")
+        print(f"\n{self.user} v{__version__} has loaded in {len(guilds)} guild(s):")
+        pprint(guilds)
+        print()
 
     def talk_back(self, message: discord.Message) -> bool:
         """
@@ -38,13 +39,16 @@ class InsultBot(commands.Bot):
         :return: If the bot has determined the user is talking back
         """
         if message.reference is not None and message.reference.resolved.author == self.user:
+            print("Bot detected a reply")
             return True
         if not self._recently_insulted:
+            # no print statement here, this would clog the logs
             return False
         content = message.content.lower()
         triggers = ["you", "yourself", "youre", "you're", "your", "yours"]
         for trigger in triggers:
             if trigger in content:
+                print("Bot detected a trigger word")
                 return True
         return False
 
@@ -75,6 +79,8 @@ class InsultBot(commands.Bot):
         insult = self._insult_api.get_insult()
         insult = insult.replace("{user}", user_tag) if "{user}" in insult \
             else user_tag + " " + insult
+        print("Bot generated insult with following data:")
+        pprint({"user": {"name": f"{user.name}#{user.discriminator}", "id": user.id}, "insult": insult})
         return insult
 
     # def _get_insults_list(self, guild: discord.Guild, user: discord.User) -> list:

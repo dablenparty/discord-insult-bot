@@ -17,8 +17,10 @@ class SlashCog(commands.Cog):
                                                               False)])
     async def _insult_command(self, ctx: SlashContext, user: discord.User = None):
         user_to_insult = ctx.author if user is None else user
+        print(f"/insult invoked on {user_to_insult}")
         insult = self.bot.generate_insult(user_to_insult)
         await ctx.send(content=insult)
+        print("/insult succeeded!")
 
 
 def setup(bot: InsultBot):

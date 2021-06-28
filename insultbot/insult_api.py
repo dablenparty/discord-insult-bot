@@ -18,5 +18,7 @@ class InsultApi:
             params["template"] = self._template
         if self._plural:
             params["plural"] = "on"
+        print("Requesting insult from API...")
         response = req.get(self._link, params=params)
+        print(f"Received '{response}'")
         return response.content.decode("utf-8").replace("%7Buser%7D", "{user}")  # html handles brackets differently
