@@ -25,9 +25,10 @@ class InsultBot(commands.Bot):
         self._recently_insulted = value
 
     async def on_ready(self):
-        print(f"{self.user} v{__version__} has loaded in the following guilds:")
-        for guild in self.guilds:
-            print(f" - {guild.name} ({guild.id})\n")
+        guilds = self.guilds
+        print(f"{self.user} v{__version__} has loaded in {len(guilds)} guilds:")
+        for guild in guilds:
+            print(f" - {guild.name} ({guild.id})")
 
     def talk_back(self, message: discord.Message):
         if message.reference is not None and message.reference.resolved.author == self.user:
