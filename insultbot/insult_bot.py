@@ -30,7 +30,13 @@ class InsultBot(commands.Bot):
         for guild in guilds:
             print(f" - {guild.name} ({guild.id})")
 
-    def talk_back(self, message: discord.Message):
+    def talk_back(self, message: discord.Message) -> bool:
+        """
+        Decides if a user is talking back to the bot
+
+        :param message: Message to analyze
+        :return: If the bot has determined the user is talking back
+        """
         if message.reference is not None and message.reference.resolved.author == self.user:
             return True
         if not self._recently_insulted:
