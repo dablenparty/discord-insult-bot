@@ -14,6 +14,7 @@ doesn't like to be tagged or replied to... it might turn on you.
 
 ## Powered by
 
+* [Insult API](https://insult.mattbas.org/api/)
 * [discord.py](https://github.com/Rapptz/discord.py)
 * [discord-py-slash-commands](https://github.com/discord-py-slash-commands/discord-py-interactions)
 * Hosted on [Heroku](https://www.heroku.com/)
