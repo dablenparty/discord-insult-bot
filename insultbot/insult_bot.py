@@ -58,22 +58,6 @@ class InsultBot(commands.Bot):
                 return True
         return False
 
-    # def add_insult(self, guild: discord.Guild, insult: str, user: discord.User = None):
-    #     db_guilds = self._database.get("guilds")
-    #     # guilds should only be added to the database if the "addinsult" command is invoked to save space
-    #     if str(guild.id) not in db_guilds:
-    #         db_guilds[guild.id] = {"name": guild.name,
-    #                                "insults": [insult], "customUsers": dict()}
-    #         return
-    #     elif user is None:
-    #         db_guilds.get(str(guild.id)).get("insults").append(insult)
-    #         return
-    #     if str(user.id) not in (custom_users := db_guilds.get(str(guild.id)).get("customUsers")):
-    #         custom_users[user.id] = {
-    #             "name": f"{user.name}#{user.discriminator}", "insults": [insult]}
-    #         return
-    #     custom_users.get("insults").append(insult)
-
     def generate_insult(self, user: discord.User) -> str:
         """
         Generates and formats an insult from the API
@@ -92,41 +76,6 @@ class InsultBot(commands.Bot):
         print("Bot generated insult with following data:")
         pprint({"user": {"name": f"{user.name}#{user.discriminator}", "id": user.id}, "insult": insult})
         return insult
-
-    # def _get_insults_list(self, guild: discord.Guild, user: discord.User) -> list:
-    #     guilds: dict = self._database.get("guilds")
-    #     # making the default return an empty dict allows for chaining even when the key isn't present
-    #     insults = \
-    #         guilds.get(str(guild.id), dict()).get("customUsers", dict()).get(str(user.id), dict()).get("insults", [])\
-    #         if user is not None else guilds.get(str(guild.id), dict()).get("insults", [])
-    #     return insults
-
-    # def get_formatted_insult_list(self, guild: discord.Guild, user: discord.User = None):
-    #     lines = []
-    #     insults = self._get_insults_list(guild, user)
-    #     if not len(insults):
-    #         if user is not None:
-    #             return "That dumbass has no custom insults. Add some first next time with the `addinsult` command."
-    #         return "You're not smart enough to have come up with any custom insults for this server yet. " \
-    #                "Once you pull your head out of your ass, maybe try adding some with the `addinsult` command."
-    #
-    #     for i, insult in enumerate(insults, 1):
-    #         lines.append(f"{i}) \"{insult}\"\n")
-    #     # surround the list with backticks to make it stand out
-    #     lines.insert(0, "```apache")
-    #     lines.append("```")
-    #     lines.append(
-    #         "||psst... pro tip, you can use \"{user}\" to tag whoever the bot is insulting||")
-    #     return '\n'.join(lines)
-
-    # def remove_insult(self, insult_index: int, guild: discord.Guild, user: discord.User = None):
-    #     if type(insult_index) is not int:
-    #         insult_index = int(insult_index)
-    #     insult_index -= 1  # the printed lists are formatted beginning at 1
-    #     insults = self._get_insults_list(guild, user)
-    #     if not len(insults) or not 0 <= insult_index < len(insults):
-    #         raise IndexError("Index out of bounds")
-    #     del insults[insult_index]
 
     def launch(self):
         self.run(self._token)
