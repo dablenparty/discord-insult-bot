@@ -1,4 +1,6 @@
 # insult_bot.py
+import random
+
 import discord
 import os
 from pprint import pprint
@@ -16,6 +18,10 @@ class InsultBot(commands.Bot):
         self._token = os.getenv("DISCORD_TOKEN")
         self._insult_api = InsultApi()
         self._recently_insulted = False
+
+    @property
+    def insult_api(self):
+        return self._insult_api
 
     @property
     def recently_insulted(self):
@@ -76,6 +82,10 @@ class InsultBot(commands.Bot):
         :return: Formatted insult
         """
         user_tag = f"<@{user.id}>"  # tags the user
+        # 1 in 9 chance to just flip them off
+        if not random.randint(1, 9) % 9:
+            print("Bot will flip the bird")
+            return user_tag + " 🖕"
         insult = self._insult_api.get_insult()
         insult = insult.replace("{user}", user_tag) if "{user}" in insult \
             else user_tag + " " + insult
