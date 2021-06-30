@@ -25,12 +25,13 @@ def main():
         if message_author == bot.user:
             return
 
-        # message.guild will be None if its a DM
-        if message.guild is not None \
-                and (bot.talk_back(message)
-                     or bot.user.id in {member.id for member in message.mentions}
-                     or not random.randint(0, 100) % 30):
-            insult = bot.generate_insult(message_author)
+        # check if it's a DM
+        if (is_dm := type(message.channel) is discord.DMChannel) \
+                or (bot.talk_back(message)
+                    or bot.user.id in {member.id for member in message.mentions}
+                    or not random.randint(0, 100) % 30):
+            insult = bot.generate_insult(message_author) if not is_dm \
+                else bot.insult_api.get_insult(who="You", plural=True)
             bot.recently_insulted = True
             await message.add_reaction("🖕")  # middle finger emoji
             await message.reply(insult)
