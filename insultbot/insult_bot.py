@@ -11,17 +11,12 @@ from discord.ext import commands
 
 
 class InsultBot(commands.Bot):
-    __slots__ = ["_token", "_insult_api", "_recently_insulted"]
+    __slots__ = ["_token", "_recently_insulted"]
 
     def __init__(self, **options):
         super().__init__(**options)
         self._token = os.getenv("DISCORD_TOKEN")
-        self._insult_api = InsultApi()
         self._recently_insulted = False
-
-    @property
-    def insult_api(self):
-        return self._insult_api
 
     @property
     def recently_insulted(self):
@@ -70,7 +65,7 @@ class InsultBot(commands.Bot):
         if not random.randint(1, 9) % 9:
             print("Bot will flip the bird")
             return user_tag + " 🖕"
-        insult = self._insult_api.get_insult()
+        insult = InsultApi.get_insult()
         insult = insult.replace("{user}", user_tag) if "{user}" in insult \
             else user_tag + " " + insult
         print("Bot generated insult with following data:")

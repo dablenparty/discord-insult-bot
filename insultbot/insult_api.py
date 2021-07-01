@@ -4,13 +4,11 @@ import requests as req
 
 class InsultApi:
     """Wrapper class for https://insult.mattbas.org/api/"""
-    __slots__ = ["_file_format", "_link"]
+    file_format = "txt"
+    __link = f"https://insult.mattbas.org/api/insult.{file_format}"
 
-    def __init__(self, file_format="txt"):
-        self._file_format = file_format
-        self._link = f"https://insult.mattbas.org/api/insult.{self._file_format}"
-
-    def get_insult(self, who="%7Buser%7D", plural=False, template: str = None):
+    @classmethod
+    def get_insult(cls, who="%7Buser%7D", plural=False, template: str = None):
         """
         Requests an insult from the API
 
@@ -25,6 +23,6 @@ class InsultApi:
         if plural:
             params["plural"] = "on"
         print("Requesting insult from API...")
-        response = req.get(self._link, params=params)
+        response = req.get(cls.__link, params=params)
         print(f"Received '{response}'")
         return response.content.decode("utf-8").replace("%7Buser%7D", "{user}")  # html handles brackets differently
