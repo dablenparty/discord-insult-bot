@@ -2,12 +2,18 @@
 import discord
 from discord.ext import commands
 from discord_slash import cog_ext, SlashContext, manage_commands
-from .insult_bot import InsultBot
+from insultbot import insult_bot
 
 
 class SlashCog(commands.Cog):
-    def __init__(self, bot: InsultBot):
-        self.bot: InsultBot = bot
+    """
+    Derived class for hosting slash commands
+
+    Note: Despite doing away with OOP in the rest of the project, this file will remain in an object-oriented format.
+    This allows for less clutter in main.py and a more logical way to read the loading of these commands.
+    """
+    def __init__(self, bot: commands.Bot):
+        self.bot = bot
 
     @cog_ext.cog_slash(name="insult",
                        description="Asks the bot to insult you, or others...",
@@ -18,11 +24,10 @@ class SlashCog(commands.Cog):
     async def _insult_command(self, ctx: SlashContext, user: discord.User = None):
         user_to_insult = ctx.author if user is None else user
         print(f"/insult invoked on {user_to_insult}")
-        insult = self.bot.generate_insult(user_to_insult)
+        insult = insult_bot.generate_insult(user_to_insult)
         await ctx.send(content=insult)
         print("/insult succeeded!")
 
 
-def setup(bot: InsultBot):
-    # InsultBot is a derived class of Bot, so this is OK
+def setup(bot: commands.Bot):
     bot.add_cog(SlashCog(bot))
