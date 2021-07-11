@@ -39,7 +39,7 @@ def main():
         if (is_dm := type(message.channel) is discord.DMChannel) \
                 or (insult_bot.bot_was_replied_to(bot, message)
                     or bot.user.id in {member.id for member in message.mentions}
-                    or not random.randint(0, 100) % 30):
+                    or not random.randint(0, 100) % 60):
             insult = insult_bot.generate_insult(message_author) if not is_dm \
                 else insult_api.get_insult(who="You", plural=True)
             await message.add_reaction("🖕")  # middle finger emoji
