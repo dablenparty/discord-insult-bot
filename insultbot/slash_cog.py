@@ -12,6 +12,7 @@ class SlashCog(commands.Cog):
     Note: Despite doing away with OOP in the rest of the project, this file will remain in an object-oriented format.
     This allows for less clutter in main.py and a more logical way to read the loading of these commands.
     """
+
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
@@ -27,6 +28,13 @@ class SlashCog(commands.Cog):
         insult = insult_bot.generate_insult(user_to_insult)
         await ctx.send(content=insult)
         print("/insult succeeded!")
+
+    @cog_ext.cog_slash(name="dap",
+                       description="Dap me up")
+    async def _dap_me_up_command(self, ctx: SlashContext):
+        print(f"/dap invoked on {ctx.author}")
+        await ctx.send("👏")
+        print("/dap succeeded")
 
 
 def setup(bot: commands.Bot):
