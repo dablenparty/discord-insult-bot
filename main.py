@@ -34,16 +34,21 @@ def main():
         message_author = message.author
         if message_author == bot.user:
             return
-
+        bot_mentioned = bot.user.id in {member.id for member in message.mentions}
         # check if it's a DM
         if (is_dm := type(message.channel) is discord.DMChannel) \
                 or (insult_bot.bot_was_replied_to(bot, message)
-                    or bot.user.id in {member.id for member in message.mentions}
+                    or bot_mentioned
                     or not random.randint(0, 100) % 60):
-            insult = insult_bot.generate_insult(message_author) if not is_dm \
-                else insult_api.get_insult(who="You", plural=True)
-            await message.add_reaction("🖕")  # middle finger emoji
-            await message.reply(insult)
+            if bot_mentioned and any([emote in message.content for emote in ["✋", "🤚", "🖐️"]]):
+                # dap em up
+                await message.reply("👏")
+            else:
+                # fuck em
+                insult = insult_bot.generate_insult(message_author) if not is_dm \
+                    else insult_api.get_insult(who="You", plural=True)
+                await message.add_reaction("🖕")  # middle finger emoji
+                await message.reply(insult)
             print("Bot replied")
 
     print("Running bot...")
