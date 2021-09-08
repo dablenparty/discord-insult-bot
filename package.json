@@ -1,0 +1,20 @@
+{
+  "name": "discord-insult-bot",
+  "version": "1.0.0",
+  "description": "A bot that insults you",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dablenparty/discord-insult-bot.git"
+  },
+  "keywords": [],
+  "author": "dablenparty",
+  "license": "All rights reserved",
+  "bugs": {
+    "url": "https://github.com/dablenparty/discord-insult-bot/issues"
+  },
+  "homepage": "https://github.com/dablenparty/discord-insult-bot#readme"
+}
