@@ -46,7 +46,7 @@ import { generateInsult } from "./insultbot/insultBot";
       ) {
         await message.reply({ content: "👏" });
       } else {
-        const insult: string = await generateInsult(message.author);
+        const insult: string = await generateInsult();
         await message.react("🖕");
         await message.reply({ content: insult });
       }
