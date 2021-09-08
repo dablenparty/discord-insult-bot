@@ -8,6 +8,11 @@ export type Command = {
   execute(interaction: CommandInteraction): Promise<void>;
 };
 
+/**
+ * Dynamically reads slash command files into a collection
+ *
+ * @returns Collection of commands with the command names as keys
+ */
 export async function readCommandsFromFolder(): Promise<
   Collection<string, Command>
 > {
@@ -28,6 +33,12 @@ export async function readCommandsFromFolder(): Promise<
   return commands;
 }
 
+/**
+ * Registers the slash commands with discord
+ *
+ * @param commands Commands to register
+ * @param client Client to register commands for
+ */
 export async function registerSlashCommands(
   commands: Collection<string, Command>,
   client: Client
