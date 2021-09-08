@@ -1,6 +1,6 @@
 import { config as loadDotenv } from "dotenv";
 import { Client, Collection, Guild, User } from "discord.js";
-import getInsult from "./insultbot/insultApi";
+import { generateInsult } from "./insultbot/insultBot";
 
 (async () => {
   loadDotenv();
@@ -46,7 +46,7 @@ import getInsult from "./insultbot/insultApi";
       ) {
         await message.reply({ content: "👏" });
       } else {
-        const insult: string = await getInsult();
+        const insult: string = await generateInsult(message.author);
         await message.react("🖕");
         await message.reply({ content: insult });
       }
