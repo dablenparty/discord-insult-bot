@@ -1,6 +1,11 @@
 import { config as loadDotenv } from "dotenv";
 import { Client, Collection, Guild, User } from "discord.js";
 import { generateInsult } from "./insultbot/insultBot";
+import {
+  Command,
+  readCommandsFromFolder,
+  registerSlashCommands,
+} from "./commands";
 
 (async () => {
   loadDotenv();
@@ -15,12 +20,22 @@ import { generateInsult } from "./insultbot/insultBot";
 
   const handEmojis = ["✋", "🤚", "🖐️"];
 
-  botClient.once("ready", () => {
+  let commands: Collection<string, Command>;
+
+  botClient.once("ready", async () => {
     const guilds: Collection<string, Guild> = botClient.guilds.valueOf();
     console.log(
       `${botClient.user?.username} v2.0.0 has loaded in ${guilds.size} guild(s):`
     );
     for (const guild of guilds) console.log(guild.toString());
+
+    try {
+      commands = await readCommandsFromFolder();
+      await registerSlashCommands(commands, botClient);
+    } catch (e) {
+      console.error(e);
+      console.error("There was an error registering slash commands");
+    }
   });
 
   botClient.on("messageCreate", async (message) => {
