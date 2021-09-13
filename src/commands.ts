@@ -50,10 +50,9 @@ export async function registerSlashCommands(
   const clientId = client.user?.id || process.env.CLIENT_ID;
   const guildId = process.env.GUILD_ID;
   if (!clientId) throw "Cannot retrieve client ID";
-  else if (!guildId) throw "Cannot retrieve guild ID";
   const routeCommands =
     process.env.DEV === "1"
-      ? Routes.applicationGuildCommands(clientId, guildId)
+      ? Routes.applicationGuildCommands(clientId, guildId || "")
       : Routes.applicationCommands(clientId);
   await rest.put(routeCommands, {
     body: commands.map((value) => value.data.toJSON()),
