@@ -11,9 +11,10 @@ export default async function getInsult(
   who = "You",
   plural = true
 ): Promise<string> {
+  console.log("Requesting insult from API...");
   const response = await axios.get(
     "https://insult.mattbas.org/api/insult.txt",
-    { params: { who, plural } }
+    { params: plural ? { who, plural } : { who } }
   );
   console.log(`Received '${response.status} ${response.statusText}'`);
   return response.data;
