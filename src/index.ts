@@ -2,7 +2,7 @@ import { config as loadDotenv } from "dotenv";
 import { Client, Collection, Guild, User } from "discord.js";
 import { generateInsult } from "./insultbot/insultBot";
 import {
-  Command,
+  SlashCommand,
   readCommandsFromFolder,
   registerSlashCommands,
 } from "./commands";
@@ -20,7 +20,7 @@ import {
 
   const handEmojis = ["✋", "🤚", "🖐️"];
 
-  let commands: Collection<string, Command>;
+  let commands: Collection<string, SlashCommand>;
 
   botClient.once("ready", async () => {
     const guilds: Collection<string, Guild> = botClient.guilds.valueOf();
@@ -35,6 +35,20 @@ import {
     } catch (e) {
       console.error(e);
       console.error("There was an error registering slash commands");
+    }
+  });
+
+  botClient.on("interactionCreate", async (interaction) => {
+    if (!interaction.isCommand()) return;
+    const command = commands.get(interaction.commandName);
+    if (!command) return;
+    try {
+      await command.execute(interaction);
+    } catch (e) {
+      console.error(e);
+      await interaction.reply({
+        content: "There was an issue running this command",
+      });
     }
   });
 
