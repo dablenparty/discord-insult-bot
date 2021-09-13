@@ -10,5 +10,8 @@ export const data = new SlashCommandBuilder()
   );
 
 export async function execute(interaction: CommandInteraction) {
-  await interaction.reply({ content: await generateInsult() });
+  const userToInsult = interaction.options.data.length
+    ? interaction.options.data[0].user
+    : interaction.user;
+  await interaction.reply({ content: await generateInsult(userToInsult) });
 }
