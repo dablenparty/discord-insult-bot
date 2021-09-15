@@ -8,13 +8,13 @@ Use this handy dandy [add link](https://discord.com/api/oauth2/authorize?client_
 or find it in [add_link.txt](https://github.com/dablenparty/discord-insult-bot/blob/main/add_link.txt) and you're good
 to go! 
 
-There is a 1 in 30 chance that the bot will randomly insult a user after they send a message. If you can't wait that 
-long, you can utilize the slash command `/insult` and tag a friend to sick the bot on them. Beware though, the bot
-doesn't like to be tagged or replied to... it might turn on you.
+There is a 1 in 45 chance that the bot will randomly insult a user after they send a message. If you can't wait that
+long, you can utilize the slash command `/insult` and tag a friend to sick the bot on them. If you're a fan
+of something the bot said, you can dap 'em up with the `/dapmeup` command, or just tag the bot with a hand emoji
+(like 🖐️).
 
 ## Powered by
 
 * [Insult API](https://insult.mattbas.org/api/)
-* [discord.py](https://github.com/Rapptz/discord.py)
-* [discord-py-slash-commands](https://github.com/discord-py-slash-commands/discord-py-interactions)
+* [discord.js](https://discord.js.org/#/)
 * Hosted on [Heroku](https://www.heroku.com/)
