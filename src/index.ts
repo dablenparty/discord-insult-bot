@@ -67,7 +67,7 @@ import {
       message.channel.type === "DM" ||
       botMentioned ||
       botRepliedTo ||
-      !(Math.floor(Math.random() * 100) % 50)
+      !(Math.floor(Math.random() * 100) % 40)
     ) {
       if (
         botMentioned &&
