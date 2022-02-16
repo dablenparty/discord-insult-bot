@@ -18,11 +18,6 @@ import {
     ],
   });
 
-  botClient.user?.setActivity("Fuck you all, I got myself", {
-    type: "STREAMING",
-    url: "https://en.wikipedia.org/wiki/Fuck",
-  });
-
   const handEmojis = ["✋", "🤚", "🖐️"];
 
   let commands: Collection<string, SlashCommand>;
@@ -89,6 +84,7 @@ import {
 
   try {
     await botClient.login(process.env.DISCORD_TOKEN);
+    botClient.user?.setActivity("Fuck you all, I got myself");
   } catch (e) {
     console.error(e);
     console.error("Shutting down...");
