@@ -18,6 +18,11 @@ import {
     ],
   });
 
+  botClient.user?.setActivity("Fuck you all, I got myself", {
+    type: "STREAMING",
+    url: "https://en.wikipedia.org/wiki/Fuck",
+  });
+
   const handEmojis = ["✋", "🤚", "🖐️"];
 
   let commands: Collection<string, SlashCommand>;
