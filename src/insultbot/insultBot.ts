@@ -10,8 +10,10 @@ import { User } from "discord.js";
  * @returns Formatted insult
  */
 export async function generateInsult(user?: User): Promise<string> {
-  if (!(Math.floor(Math.random() * 9) % 9))
-    return `🖕 ${user?.toString() ?? ""}`.trimEnd();
+  // I felt that replying with the middle finger should tag the user anyways, because of the command. However, I like
+  // the thought of the bot not wanting to insult who it wants, and flipping the sender off instead, so it's going to
+  // stay that way now and likely won't change again
+  if (!(Math.floor(Math.random() * 9) % 9)) return "🖕";
   try {
     if (!user) return await getInsult();
     const insult = await getInsult("{user}", false);
