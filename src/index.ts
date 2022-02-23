@@ -84,7 +84,7 @@ import {
 
   try {
     await botClient.login(process.env.DISCORD_TOKEN);
-    botClient.user?.setActivity("Fuck you all, I got myself");
+    botClient.user?.setActivity({ name: process.env.STATUS_TEXT ?? "" });
   } catch (e) {
     console.error(e);
     console.error("Shutting down...");
