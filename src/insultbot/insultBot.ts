@@ -10,7 +10,8 @@ import { User } from "discord.js";
  * @returns Formatted insult
  */
 export async function generateInsult(user?: User): Promise<string> {
-  if (!(Math.floor(Math.random() * 9) % 9)) return "🖕";
+  if (!(Math.floor(Math.random() * 9) % 9))
+    return `🖕 ${user?.toString() ?? ""}`.trimEnd();
   try {
     if (!user) return await getInsult();
     const insult = await getInsult("{user}", false);
